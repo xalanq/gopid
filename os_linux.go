@@ -13,6 +13,8 @@
 // permissions and limitations under the License. See the AUTHORS file
 // for names of contributors.
 
+// +build !loong64
+
 package goid
 
 type sigset [2]uint32

@@ -1,4 +1,4 @@
-// Copyright 2019 Cholerae Hu.
+// Copyright 2022 Loongson inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
 // permissions and limitations under the License. See the AUTHORS file
 // for names of contributors.
 
-//go:build (amd64 || amd64p32 || arm64 || loong64) && !windows && gc && go1.5
-// +build amd64 amd64p32 arm64 loong64
-// +build !windows
-// +build gc
-// +build go1.5
+// Assembly to mimic runtime.getg.
 
-package goid
+// +build loong64
+// +build gc,go1.5
 
-//go:nosplit
-func getPid() uintptr
+#include "go_asm.h"
+#include "textflag.h"
 
-//go:nosplit
-func GetPid() int {
-	return int(getPid())
-}
+// func getPid() int64
+TEXT ·getPid(SB),NOSPLIT,$0-8
+	MOVV	g, R12
+	MOVV	g_m(R12), R13
+	MOVV	m_p(R13), R12
+	MOVW	p_id(R12), R13
+	MOVV	R13, ret+0(FP)
+	RET
