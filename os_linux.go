@@ -13,7 +13,8 @@
 // permissions and limitations under the License. See the AUTHORS file
 // for names of contributors.
 
-// +build !loong64
+//go:build !loong64 && !mips64 && !mips64le
+// +build !loong64,!mips64,!mips64le
 
 package goid
 
