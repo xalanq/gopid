@@ -13,9 +13,10 @@
 // permissions and limitations under the License. See the AUTHORS file
 // for names of contributors.
 
-//go:build !mips64 && !mips64le && !riscv64 && !loong64
-// +build !mips64,!mips64le,!riscv64,!loong64
+//go:build riscv64
+// +build riscv64
 
 package goid
 
-type sigset [2]uint32
+// only for 4.19 kernel
+type sigset [4]uint32

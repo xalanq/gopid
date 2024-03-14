@@ -1,4 +1,4 @@
-// Copyright 2022 Cholerae Hu.
+// Copyright 2024 xalanq <xalanq@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,9 +13,19 @@
 // permissions and limitations under the License. See the AUTHORS file
 // for names of contributors.
 
-//go:build !mips64 && !mips64le && !riscv64 && !loong64
-// +build !mips64,!mips64le,!riscv64,!loong64
+// Assembly to mimic runtime.getg.
 
-package goid
+//go:build riscv64
+// +build riscv64
 
-type sigset [2]uint32
+#include "go_asm.h"
+#include "textflag.h"
+
+// func getPid() int64
+TEXT ·getPid(SB), NOSPLIT, $0-8
+	MOV	g, T0
+	MOV	g_m(T0), T1
+	MOV	m_p(T1), T0
+	MOV	p_id(T0), T1
+	MOV	T1, ret+0(FP)
+	RET
